@@ -54,11 +54,11 @@ class Linear(tf.keras.layers.Layer):
         y = self.dense(inputs)
         return y
     
-# class DefaultLinear1QuantizeConfig(DefaultLinearQuantizeConfig):
-#     pass
-# @tf.keras.saving.register_keras_serializable()
-# class Linear1(Linear):
-#     pass
+class DefaultLinear1QuantizeConfig(DefaultLinearQuantizeConfig):
+    pass
+@tf.keras.saving.register_keras_serializable()
+class Linear1(Linear):
+    pass
 
 # Define a custom model
 @tf.keras.saving.register_keras_serializable()
@@ -127,7 +127,7 @@ if __name__ == "__main__":
         print("")
 
     # set the input min and max for the quantized model
-    
+
     # W= [[1,1,1],
     #     [1,1,1],
     #     [1,1,1]]
@@ -149,6 +149,8 @@ if __name__ == "__main__":
     out = quant_aware_model(x)
     print("Quantized model output:")
     print(out)
+    print("The output is wrong because the inputs are clipped [0,0,0]")
+    print("if the input min and max are set to [0,0]")
 
     quant_aware_model.variables[0].assign(-1)
     quant_aware_model.variables[1].assign(1)
@@ -157,3 +159,5 @@ if __name__ == "__main__":
     out = quant_aware_model(x)
     print("Quantized model output:")
     print(out)
+    print("The output is wrong because the inputs are clipped to [1,1,1]")
+    print("if the input min and max are set to [-1,1]")
